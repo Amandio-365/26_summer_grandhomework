@@ -1,0 +1,329 @@
+#pragma once
+#include"Car.h"
+#include"Menu.h"
+#include"Admin.h"
+#include"GlobalData.h"
+class AdminMenu: public Menu
+{
+public:
+	AdminMenu(string id, string pwd) :Menu() 
+	{ 
+		ad = new Admin(id, pwd);
+		for (int i = 0;i < uvecforall.size();i++)
+		{
+			if (uvecforall[i].getauth() == -1)
+			{
+				ApplyUserVect.push_back(uvecforall[i]);
+				cout << "1" << endl;
+			}
+		}
+	}
+	AdminMenu(const AdminMenu& other) :Menu(other) { ad = new Admin(*other.ad); }
+	virtual void MainLoop()
+	{
+		while (true)
+		{
+			DisplayMenu();
+			cin >> choice;
+			cin.ignore();
+			switch (choice)
+			{
+			case(1):
+			{
+				setColor(10);
+				cout << "按照如下格式输入：" << endl;
+				cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
+				cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
+				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
+				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
+				resetColor();
+				string tempnum, tempowner, tempregtime, tempcolor, tempbrand;
+				double length_min, length_max, width_min, width_max, height_min, height_max;
+				cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
+				cin.ignore();
+				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+				cin.ignore();
+				resetColor();
+				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
+					length_min, length_max, width_min, width_max, height_min, height_max);
+				if (tempvect.size() != 0)
+				{
+					setColor(2);
+					cout << "符合条件的车辆有" << tempvect.size() << "辆：" << endl;
+					for (int i = 0;i < tempvect.size();i++)
+						tempvect[i].display();
+					resetColor();
+				}
+				else
+				{
+					setColor(4);
+					cout << "没有符合条件的车辆！" << endl;
+					resetColor();
+				}
+				break;
+			}
+			case(2):
+			{
+				string temppwd1 = "1", temppwd2 = "2";
+				setColor(14);
+				cout << "请输入您的新密码：" << endl;
+				resetColor();
+				cin >> temppwd1;
+				cin.ignore();
+				setColor(14);
+				cout << "请再次输入您的新密码：" << endl;
+				cin >> temppwd2;
+				cin.ignore();
+				resetColor();
+				if (temppwd1 == temppwd2)
+					ad->Editpwd(temppwd1);
+				else
+				{
+					setColor(4);
+					cout << "两次输入密码不一样！请您重新操作！" << endl;
+					resetColor();
+				}
+				break;
+			}
+			case(3):
+			{
+				bool sec_isRunning = true;
+				while (sec_isRunning)
+				{
+					second_display();
+					int second_choice;
+					cin >> second_choice;
+					cin.ignore();
+					switch (second_choice)
+					{
+					case(1):
+					{
+						setColor(10);
+						cout << "请依次输入新车辆的车牌号、用户名、持有者id、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
+						resetColor();
+						string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand;
+						double length, width, height;
+						if ((cin >> tempnum >> tempowner >> tempregtime >> tempownerid >> tempcolor >> tempbrand) &&
+							(cin >> length >> width >> height))
+						{
+							setColor(2);
+							cout << "录入新车辆成功!" << endl;
+							resetColor();
+							cin.ignore();
+							ad->AddCar(tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand, length, width, height);
+						}
+						else
+						{
+							setColor(4);
+							cout << "您的输入格式不正确！" << endl;
+							resetColor();
+						}
+						break;
+					}
+					case(2):
+					{
+						setColor(10);
+						cout << "请输入您要删除的车辆的车牌照号：";
+						resetColor();
+						string tempnum;
+						cin >> tempnum;
+						cin.ignore();
+						if (!(ad->DeleteCar(tempnum)))
+						{
+							setColor(4);
+							cout << "未找到对应车牌照的车辆！" << endl;
+							resetColor();
+						}
+						break;
+					}
+					case(3):
+					{
+						setColor(10);
+						cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
+						cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
+						resetColor();
+						string tempnum, newinfo;
+						int position;
+						double newdata;
+						cin >> tempnum >> position;
+						cin.ignore();
+						if ((position == 1) || (position == 2))
+						{
+							cin >> newinfo;
+							cin.ignore();
+							if (!(ad->EditCar1(tempnum, position, newinfo)))
+							{
+								setColor(4);
+								cout << "未找到对应车牌照的车辆！" << endl;
+								resetColor();
+								break;
+							}
+							else
+							{
+								setColor(2);
+								cout << "修改成功！" << endl;
+								resetColor();
+							}
+						}
+						else if ((position == 3) || (position == 4) || (position == 5))
+						{
+							cin >> newdata;
+							cin.ignore();
+							if (!(ad->EditCar2(tempnum, position, newdata)))
+							{
+								setColor(4);
+								cout << "未找到对应车牌照的车辆！" << endl;
+								resetColor();
+								break;
+							}
+							else
+							{
+								setColor(2);
+								cout << "修改成功！" << endl;
+								resetColor();
+							}
+						}
+						break;
+					}
+					case(4):
+					{
+						sec_isRunning = false;
+						break;
+					}
+					default:
+					{
+						setColor(4);
+						cout << "输入错误！" << endl;
+						resetColor();
+					}
+					}
+				}
+				break;
+			}
+			case(4):
+			{
+				ad->DisplayEdit();
+				break;
+			}
+			case(5):
+			{
+				setColor(3);
+				cout << "您想以下面哪个条件进行车辆的排序？" << endl;
+				cout << "1.车牌号  2.注册时间  3.颜色  4.车辆品牌" << endl;
+				cout << "5.车辆长度  6.车辆宽度  7.车辆高度" << endl;
+				resetColor();
+				int i, j;
+				cin >> i;
+				cin.ignore();
+				switch (i)
+				{
+				case(1):
+				{
+					sort(cvecforall.begin(), cvecforall.end());
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(2):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpirt);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(3):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpic);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(4):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpib);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(5):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpil);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(6):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpiw);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				case(7):
+				{
+					sort(cvecforall.begin(), cvecforall.end(), cpih);
+					for (j = 0;j < cvecforall.size();j++)
+						cvecforall[j].display();
+					break;
+				}
+				default: cout << "输入错误！请您重新尝试！" << endl;
+				}
+				break;
+			}
+			case(6):
+			{
+				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
+				double confirm;
+				for (int i = 0;i < ApplyUserVect.size();i++)
+				{
+					cout << "申请用户的id：" << ApplyUserVect[i].getid() << "   ";
+					cin >> confirm;
+					cin.ignore();
+					if (confirm == 1) ApplyUserVect[i].Resetauth(2);
+					else ApplyUserVect[i].Resetauth(3);
+				}
+				cout << "处理完毕！" << endl;
+				ad->saveApplyUserVect(ApplyUserVect);
+				break;
+			}
+			case(7):
+			{
+				cout << "感谢使用！" << endl;
+				return;
+			}
+			default:cout << "输入错误！" << endl;
+			}
+		}
+	}
+	virtual void DisplayMenu()
+	{
+		setColor(14);
+		cout << "-------------------欢迎来到管理员界面！-----------------" << endl;
+		cout << "-----------------请选择您需要使用的功能：---------------" << endl;
+		cout << "-------------------1.查询车辆与排序---------------------" << endl;
+		cout << "------------------2.修改个人账户密码--------------------" << endl;
+		cout << "---------------3.添加、删除或修改车辆信息---------------" << endl;
+		cout << "----------------4.查看本次登录后操作记录----------------" << endl;
+		cout << "--------------------5.查看车辆排序----------------------" << endl;
+		cout << "---------------6.查看用户申请提升权限记录---------------" << endl;
+		cout << "----------------------7.退出系统------------------------" << endl;
+		resetColor();
+	}
+	void second_display()
+	{
+		setColor(14);
+		cout << "-------------------请选择您要进行的操作-----------------" << endl;
+		cout << "-----------------------1.增添车辆-----------------------" << endl;
+		cout << "-----------------------2.删除车辆-----------------------" << endl;
+		cout << "----------------------3.修改车辆信息--------------------" << endl;
+		cout << "----------------------4.退回上级菜单--------------------" << endl;
+		resetColor();
+	}
+	virtual void RestoreAuth()
+	{
+		ad->Editauth(1);
+	}
+private:
+	Admin* ad;
+	vector<User> ApplyUserVect;
+};
