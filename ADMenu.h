@@ -26,6 +26,7 @@ public:
 			DisplayMenu();
 			cin >> choice;
 			cin.ignore();
+			system("cls");
 			switch (choice)
 			{
 			case(1):
@@ -43,7 +44,6 @@ public:
 				cin.ignore();
 				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
 				cin.ignore();
-				resetColor();
 				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
 					length_min, length_max, width_min, width_max, height_min, height_max);
 				if (tempvect.size() != 0)
@@ -65,18 +65,23 @@ public:
 			case(2):
 			{
 				string temppwd1 = "1", temppwd2 = "2";
-				setColor(14);
+				setColor(9);
 				cout << "请输入您的新密码：" << endl;
 				resetColor();
 				cin >> temppwd1;
 				cin.ignore();
-				setColor(14);
+				setColor(9);
 				cout << "请再次输入您的新密码：" << endl;
+				resetColor();
 				cin >> temppwd2;
 				cin.ignore();
-				resetColor();
 				if (temppwd1 == temppwd2)
+				{
+					setColor(10);
+					cout << "修改成功！" << endl;
 					ad->Editpwd(temppwd1);
+					resetColor();
+				}
 				else
 				{
 					setColor(4);
@@ -94,6 +99,7 @@ public:
 					int second_choice;
 					cin >> second_choice;
 					cin.ignore();
+					system("cls");
 					switch (second_choice)
 					{
 					case(1):
@@ -103,7 +109,7 @@ public:
 						resetColor();
 						string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand;
 						double length, width, height;
-						if ((cin >> tempnum >> tempowner >> tempregtime >> tempownerid >> tempcolor >> tempbrand) &&
+						if ((cin >> tempnum >> tempowner >> tempownerid >> tempregtime >> tempcolor >> tempbrand) &&
 							(cin >> length >> width >> height))
 						{
 							setColor(2);
@@ -114,9 +120,7 @@ public:
 						}
 						else
 						{
-							setColor(4);
-							cout << "您的输入格式不正确！" << endl;
-							resetColor();
+							reportError();
 						}
 						break;
 					}
@@ -192,9 +196,7 @@ public:
 					}
 					default:
 					{
-						setColor(4);
-						cout << "输入错误！" << endl;
-						resetColor();
+						reportError();
 					}
 					}
 				}
@@ -272,26 +274,39 @@ public:
 			}
 			case(6):
 			{
+				setColor(9);
 				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
+				resetColor();
 				double confirm;
 				for (int i = 0;i < ApplyUserVect.size();i++)
 				{
-					cout << "申请用户的id：" << ApplyUserVect[i].getid() << "   ";
+					setColor(13);
+					cout << "申请用户的id：";
+					setColor(3);
+					cout << ApplyUserVect[i].getid() << "   ";
+					resetColor();
 					cin >> confirm;
 					cin.ignore();
 					if (confirm == 1) ApplyUserVect[i].Resetauth(2);
 					else ApplyUserVect[i].Resetauth(3);
 				}
+				setColor(10);
 				cout << "处理完毕！" << endl;
+				resetColor();
 				ad->saveApplyUserVect(ApplyUserVect);
 				break;
 			}
 			case(7):
 			{
+				setColor(10);
 				cout << "感谢使用！" << endl;
+				resetColor();
 				return;
 			}
-			default:cout << "输入错误！" << endl;
+			default:
+			{
+				reportError();
+			}
 			}
 		}
 	}

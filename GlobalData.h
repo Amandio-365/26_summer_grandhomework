@@ -1,4 +1,5 @@
 #pragma once
+#include<cstdlib>
 #include<vector>
 #include<algorithm>
 #include<functional>
@@ -19,3 +20,4 @@ bool cpiw(const Car& c1, const Car& c2);
 bool cpih(const Car& c1, const Car& c2);
 void setColor(int color);
 void resetColor();
+void reportError();

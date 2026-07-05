@@ -55,3 +55,9 @@ void resetColor()
 {
 	setColor(7);
 }
+void reportError()
+{
+	setColor(4);
+	cout << "ÊäÈë´íÎó£¡" << endl;
+	resetColor();
+}

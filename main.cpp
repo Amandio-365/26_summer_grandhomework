@@ -19,10 +19,13 @@ int main()
 		setColor(11);
 		cout << "------------------请输入您的账户id：--------------" << endl;
 		cout << "                  ";
+		resetColor();
 		cin >> tempid;
 		cin.ignore();
+		setColor(11);
 		cout << "------------------请输入您的密码：----------------" << endl;
 		cout << "                  ";
+		resetColor();
 		cin >> temppwd;
 		cin.ignore();
 		resetColor();
@@ -40,18 +43,22 @@ int main()
 			if ((uvecforall[i].getauth() == 0) || (uvecforall[i].getauth() == -1))
 			{
 				menuptr = new NormalUserMenu(tempid, temppwd);
+				system("cls");
 				menuptr->MainLoop();
 				break;
 			}
 			else if (uvecforall[i].getauth() == 1)
 			{
 				menuptr = new AdminMenu(tempid, temppwd);
+				system("cls");
 				menuptr->MainLoop();
 				break;
 			}
 			else if (uvecforall[i].getauth() == 2)
 			{
+				setColor(10);
 				cout << "恭喜您获得了管理员的权限！" << endl;
+				resetColor();
 				menuptr = new AdminMenu(tempid, temppwd);
 				menuptr->RestoreAuth();
 				menuptr->MainLoop();
@@ -59,8 +66,10 @@ int main()
 			}
 			else if (uvecforall[i].getauth() == 3)
 			{
+				setColor(4);
 				cout << "抱歉，您的权限升级申请被拒绝了！" << endl;
-				menuptr = new AdminMenu(tempid, temppwd);
+				resetColor();
+				menuptr = new NormalUserMenu(tempid, temppwd);
 				menuptr->RestoreAuth();
 				menuptr->MainLoop();
 				break;
