@@ -17,26 +17,42 @@ public:
 			DisplayMenu();
 			cin >> choice;
 			cin.ignore();
+			if (!IsAllNumber(choice))
+			{
+				setColor(4);
+				cout << "输入有非数字!" << endl;
+				resetColor();
+				continue;
+			}
+			int int_choice = stoi(choice);
 			system("cls");
-			switch (choice)
+			switch (int_choice)
 			{
 			case(1):
 			{
-				setColor(10);
-				cout << "按照如下格式输入：" << endl;
-				cout << "车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值 + 车辆宽度最小值 + 车辆宽度最大值";
-				cout << "+车辆高度最小值 + 车辆高度最大值" << endl;
-				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
-				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
-				resetColor();
-				string tempcolor, tempbrand;
-				double length_min, length_max, width_min, width_max, height_min, height_max;
-				cin >> tempcolor >> tempbrand;
-				cin.ignore();
-				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
-				cin.ignore();
-				vector<Car> tempvect = searcher("\\", "\\", "\\",  tempcolor, tempbrand,
-					length_min, length_max, width_min, width_max, height_min, height_max);
+				string tempcolor, tempbrand, length_min, length_max, 
+					width_min, width_max, height_min, height_max;
+				while (true)
+				{
+					setColor(10);
+					cout << "按照如下格式输入：" << endl;
+					cout << "车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值 + 车辆宽度最小值 + 车辆宽度最大值";
+					cout << "+车辆高度最小值 + 车辆高度最大值" << endl;
+					cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
+					cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
+					resetColor();
+					cin >> tempcolor >> tempbrand;
+					cin.ignore();
+					cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+					cin.ignore();
+					if ((CheckCarAllInfo(length_min, width_min, height_min)) &&
+						(CheckCarAllInfo(length_max, width_max, height_max)))
+						break;
+					else resetCin();
+				}
+				vector<Car> tempvect = searcher("\\", "\\", "\\", 
+					tempcolor, tempbrand, stod(length_min), stod(length_max), stod(width_min)
+					, stod(width_max), stod(height_min), stod(height_max));
 				if (tempvect.size() != 0)
 				{
 					setColor(2);
@@ -92,33 +108,47 @@ public:
 				while (sec_isRunning)
 				{
 					second_display();
-					int second_choice;
+					string second_choice;
 					cin >> second_choice;
 					cin.ignore();
+					if (!IsAllNumber(second_choice))
+					{
+						setColor(4);
+						cout << "输入有非数字!" << endl;
+						resetColor();
+						resetCin();
+						continue;
+					}
+					int int_second_choice = stoi(second_choice);
 					system("cls");
-					switch (second_choice)
+					switch (int_second_choice)
 					{
 					case(1):
 					{
-						setColor(10);
-						cout << "请依次输入您的新车辆的车牌号、用户名、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
-						resetColor();
-						string tempnum, tempowner, tempregtime, tempcolor, tempbrand;
-						double length, width, height;
-						if ((cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand) &&
-							(cin >> length >> width >> height))
+						while (true)
 						{
-							setColor(2);
-							cout << "录入新车辆成功!" << endl;
+							string tempnum, tempowner, tempregtime, tempcolor, tempbrand,
+								length, width, height;
+							setColor(10);
+							cout << "请依次输入新车辆的车牌号、用户名、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
+							resetColor();
+							cin >> tempnum >> tempowner >> tempregtime >> tempcolor
+								>> tempbrand >> length >> width >> height;
 							cin.ignore();
-							resetColor();
-							nu->AddMyCar(tempnum, tempowner, tempregtime, tempcolor, tempbrand, length, width, height);
-						}
-						else
-						{
-							setColor(4);
-							cout << "您的输入格式不正确！" << endl;
-							resetColor();
+							if (CheckCarAllInfo(length, width, height, tempregtime))
+							{
+								setColor(2);
+								cout << "录入新车辆成功!" << endl;
+								resetColor();
+								cin.ignore();
+								nu->AddMyCar(tempnum, tempowner, tempregtime,
+									tempcolor, tempbrand, stod(length), stod(width), stod(height));
+							}
+							else
+							{
+								reportError();
+								resetCin();
+							}
 						}
 						break;
 					}
@@ -146,18 +176,32 @@ public:
 					}
 					case(3):
 					{
-						setColor(10);
-						cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
-						cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
-						resetColor();
-						string tempnum, newinfo;
-						int position, newdata;
-						cin >> tempnum >> position;
-						if ((position == 1) || (position == 2))
+						string tempnum, newinfo, position, newdata;
+						double temp;
+						while (true)
+						{
+							setColor(10);
+							cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
+							cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
+							resetColor();
+							cin >> tempnum >> position;
+							cin.ignore();
+							if (!IsAllNumber(position))
+							{
+								setColor(4);
+								cout << "输入有非数字!" << endl;
+								resetColor();
+								resetCin();
+								continue;
+							}
+							else break;
+						}
+						int int_pos = stoi(position);
+						if ((int_pos == 1) || (int_pos == 2))
 						{
 							cin >> newinfo;
 							cin.ignore();
-							if (!(nu->EditMyCar1(tempnum, position, newinfo)))
+							if (!(nu->EditMyCar1(tempnum, int_pos, newinfo)))
 							{
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
@@ -171,11 +215,23 @@ public:
 								resetColor();
 							}
 						}
-						else if ((position == 3) || (position == 4) || (position == 5))
+						else if ((int_pos == 3) || (int_pos == 4) || (int_pos == 5))
 						{
-							cin >> newdata;
-							cin.ignore();
-							if (!(nu->EditMyCar2(tempnum, position, newdata)))
+							while (true)
+							{
+								cin >> newdata;
+								cin.ignore();
+								if (!StringToPositiveDouble(newdata, temp))
+								{
+									setColor(4);
+									cout << "新数据输入有误!" << endl;
+									resetColor();
+									resetCin();
+									continue;
+								}
+								else break;
+							}
+							if (!nu->EditMyCar2(tempnum, int_pos, stod(newdata)))
 							{
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
@@ -206,13 +262,13 @@ public:
 			}
 			case(4):
 			{
-				double confirm;
+				string confirm;
 				setColor(12);
 				cout << "您是否确认申请成为管理员？(输入1以确认申请，其他输入均会被认为是退出页面)" << endl;
 				resetColor();
 				cin >> confirm;
 				cin.ignore();
-				if (confirm == 1)
+				if (confirm == "1")
 				{
 					nu->ApplyToBeAdmin();
 					setColor(10);

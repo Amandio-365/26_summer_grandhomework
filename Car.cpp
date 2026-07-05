@@ -134,7 +134,13 @@ double Car::getheight() const
 }
 bool Car::operator < (const Car& other)
 {
-	return (num < other.num);
+	string py1 = GetPlatePinYin(num);
+	string py2 = GetPlatePinYin(other.num);
+	if (py1 != py2)
+	{
+		return py1 < py2;
+	}
+	return num < other.num;
 }
 Car& Car::operator = (const Car& other)
 {

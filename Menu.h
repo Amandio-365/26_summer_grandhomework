@@ -6,9 +6,9 @@ using namespace std;
 class Menu
 {
 public:
-	int choice;
+	string choice;
 	bool isRunning;
-	Menu() :choice(0), isRunning(1) {}
+	Menu() :choice(""), isRunning(1) {}
 	Menu(const Menu& other) :choice(other.choice), isRunning(other.isRunning) {}
 	virtual void MainLoop() = 0;
 	virtual void DisplayMenu() = 0;

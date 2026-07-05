@@ -14,7 +14,6 @@ public:
 			if (uvecforall[i].getauth() == -1)
 			{
 				ApplyUserVect.push_back(uvecforall[i]);
-				cout << "1" << endl;
 			}
 		}
 	}
@@ -26,26 +25,45 @@ public:
 			DisplayMenu();
 			cin >> choice;
 			cin.ignore();
+			if (!IsAllNumber(choice))
+			{
+				setColor(4);
+				cout << "输入有非数字!" << endl;
+				resetColor();
+				resetCin();
+				continue;
+			}
+			int int_choice = stoi(choice);
 			system("cls");
-			switch (choice)
+			switch (int_choice)
 			{
 			case(1):
 			{
-				setColor(10);
-				cout << "按照如下格式输入：" << endl;
-				cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
-				cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
-				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
-				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
-				resetColor();
-				string tempnum, tempowner, tempregtime, tempcolor, tempbrand;
-				double length_min, length_max, width_min, width_max, height_min, height_max;
-				cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
-				cin.ignore();
-				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
-				cin.ignore();
+				string tempnum, tempowner, tempregtime, tempcolor, tempbrand,
+					length_min, length_max, width_min, width_max, height_min, height_max;
+				while (true)
+				{
+					setColor(10);
+					cout << "按照如下格式输入：" << endl;
+					cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
+					cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
+					cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
+					cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
+					resetColor();
+					cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
+					cin.ignore();
+					cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+					cin.ignore();
+					if ((CheckCarAllInfo(length_min, width_min, height_min, tempregtime)) &&
+						(CheckCarAllInfo(length_max, width_max, height_max)))
+					{
+						break;
+					}
+					else resetCin();
+				}
 				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
-					length_min, length_max, width_min, width_max, height_min, height_max);
+					stod(length_min), stod(length_max), stod(width_min), stod(width_max), stod(height_min)
+					, stod(height_max));
 				if (tempvect.size() != 0)
 				{
 					setColor(2);
@@ -96,31 +114,47 @@ public:
 				while (sec_isRunning)
 				{
 					second_display();
-					int second_choice;
+					string second_choice;
 					cin >> second_choice;
 					cin.ignore();
+					if (!IsAllNumber(second_choice))
+					{
+						setColor(4);
+						cout << "输入有非数字!" << endl;
+						resetColor();
+						resetCin();
+						continue;
+					}
+					int int_second_choice = stoi(second_choice);
 					system("cls");
-					switch (second_choice)
+					switch (int_second_choice)
 					{
 					case(1):
 					{
-						setColor(10);
-						cout << "请依次输入新车辆的车牌号、用户名、持有者id、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
-						resetColor();
-						string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand;
-						double length, width, height;
-						if ((cin >> tempnum >> tempowner >> tempownerid >> tempregtime >> tempcolor >> tempbrand) &&
-							(cin >> length >> width >> height))
+						while (true)
 						{
-							setColor(2);
-							cout << "录入新车辆成功!" << endl;
+							string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand,
+								length, width, height;
+							setColor(10);
+							cout << "请依次输入新车辆的车牌号、用户名、持有者id、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
 							resetColor();
+							cin >> tempnum >> tempowner >> tempownerid >> tempregtime >> tempcolor
+								>> tempbrand >> length >> width >> height;
 							cin.ignore();
-							ad->AddCar(tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand, length, width, height);
-						}
-						else
-						{
-							reportError();
+							if (CheckCarAllInfo(length, width, height, tempregtime))
+							{
+								setColor(2);
+								cout << "录入新车辆成功!" << endl;
+								resetColor();
+								cin.ignore();
+								ad->AddCar(tempnum, tempowner, tempownerid, tempregtime,
+									tempcolor, tempbrand, stod(length), stod(width), stod(height));
+							}
+							else
+							{
+								reportError();
+								resetCin();
+							}
 						}
 						break;
 					}
@@ -142,20 +176,32 @@ public:
 					}
 					case(3):
 					{
-						setColor(10);
-						cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
-						cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
-						resetColor();
-						string tempnum, newinfo;
-						int position;
-						double newdata;
-						cin >> tempnum >> position;
-						cin.ignore();
-						if ((position == 1) || (position == 2))
+						string tempnum, newinfo, position, newdata;
+						double temp;
+						while (true)
+						{
+							setColor(10);
+							cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
+							cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
+							resetColor();
+							cin >> tempnum >> position;
+							cin.ignore();
+							if (!IsAllNumber(position))
+							{
+								setColor(4);
+								cout << "输入有非数字!" << endl;
+								resetColor();
+								resetCin();
+								continue;
+							}
+							else break;
+						}
+						int int_pos = stoi(position);
+						if ((int_pos == 1) || (int_pos == 2))
 						{
 							cin >> newinfo;
 							cin.ignore();
-							if (!(ad->EditCar1(tempnum, position, newinfo)))
+							if (!(ad->EditCar1(tempnum, int_pos, newinfo)))
 							{
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
@@ -169,11 +215,23 @@ public:
 								resetColor();
 							}
 						}
-						else if ((position == 3) || (position == 4) || (position == 5))
+						else if ((int_pos == 3) || (int_pos == 4) || (int_pos == 5))
 						{
-							cin >> newdata;
-							cin.ignore();
-							if (!(ad->EditCar2(tempnum, position, newdata)))
+							while (true)
+							{
+								cin >> newdata;
+								cin.ignore();
+								if (!StringToPositiveDouble(newdata, temp))
+								{
+									setColor(4);
+									cout << "新数据输入有误!" << endl;
+									resetColor();
+									resetCin();
+									continue;
+								}
+								else break;
+							}
+							if (!ad->EditCar2(tempnum, int_pos, stod(newdata)))
 							{
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
@@ -211,13 +269,23 @@ public:
 			{
 				setColor(3);
 				cout << "您想以下面哪个条件进行车辆的排序？" << endl;
-				cout << "1.车牌号  2.注册时间  3.颜色  4.车辆品牌" << endl;
-				cout << "5.车辆长度  6.车辆宽度  7.车辆高度" << endl;
+				cout << "1.车牌号  2.注册时间  3.颜色" << endl;
+				cout << "4.车辆长度  5.车辆宽度  6.车辆高度" << endl;
 				resetColor();
-				int i, j;
+				string i;
+				int j;
 				cin >> i;
 				cin.ignore();
-				switch (i)
+				if (!IsAllNumber(i))
+				{
+					setColor(4);
+					cout << "输入有非数字!" << endl;
+					resetColor();
+					resetCin();
+					continue;
+				}
+				int int_i = stoi(i);
+				switch (int_i)
 				{
 				case(1):
 				{
@@ -242,26 +310,19 @@ public:
 				}
 				case(4):
 				{
-					sort(cvecforall.begin(), cvecforall.end(), cpib);
+					sort(cvecforall.begin(), cvecforall.end(), cpil);
 					for (j = 0;j < cvecforall.size();j++)
 						cvecforall[j].display();
 					break;
 				}
 				case(5):
 				{
-					sort(cvecforall.begin(), cvecforall.end(), cpil);
-					for (j = 0;j < cvecforall.size();j++)
-						cvecforall[j].display();
-					break;
-				}
-				case(6):
-				{
 					sort(cvecforall.begin(), cvecforall.end(), cpiw);
 					for (j = 0;j < cvecforall.size();j++)
 						cvecforall[j].display();
 					break;
 				}
-				case(7):
+				case(6):
 				{
 					sort(cvecforall.begin(), cvecforall.end(), cpih);
 					for (j = 0;j < cvecforall.size();j++)
@@ -277,7 +338,7 @@ public:
 				setColor(9);
 				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
 				resetColor();
-				double confirm;
+				string confirm;
 				for (int i = 0;i < ApplyUserVect.size();i++)
 				{
 					setColor(13);
@@ -287,7 +348,7 @@ public:
 					resetColor();
 					cin >> confirm;
 					cin.ignore();
-					if (confirm == 1) ApplyUserVect[i].Resetauth(2);
+					if (confirm == "1") ApplyUserVect[i].Resetauth(2);
 					else ApplyUserVect[i].Resetauth(3);
 				}
 				setColor(10);
