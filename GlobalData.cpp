@@ -178,5 +178,5 @@ bool CheckCarAllInfo(const string& lenStr,
 void resetCin()
 {
 	cin.clear();
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	cin.ignore(cin.rdbuf()->in_avail());
 }

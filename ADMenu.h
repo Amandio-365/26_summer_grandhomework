@@ -41,26 +41,19 @@ public:
 			{
 				string tempnum, tempowner, tempregtime, tempcolor, tempbrand,
 					length_min, length_max, width_min, width_max, height_min, height_max;
-				while (true)
-				{
-					setColor(10);
-					cout << "按照如下格式输入：" << endl;
-					cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
-					cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
-					cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
-					cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
-					resetColor();
-					cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
-					cin.ignore();
-					cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
-					cin.ignore();
-					if ((CheckCarAllInfo(length_min, width_min, height_min, tempregtime)) &&
-						(CheckCarAllInfo(length_max, width_max, height_max)))
-					{
-						break;
-					}
-					else resetCin();
-				}
+
+
+				setColor(10);
+				cout << "按照如下格式输入：" << endl;
+				cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
+				cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
+				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
+				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
+				resetColor();
+				cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
+				cin.ignore();
+				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+				cin.ignore();
 				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
 					stod(length_min), stod(length_max), stod(width_min), stod(width_max), stod(height_min)
 					, stod(height_max));
@@ -146,9 +139,9 @@ public:
 								setColor(2);
 								cout << "录入新车辆成功!" << endl;
 								resetColor();
-								cin.ignore();
 								ad->AddCar(tempnum, tempowner, tempownerid, tempregtime,
 									tempcolor, tempbrand, stod(length), stod(width), stod(height));
+								break;
 							}
 							else
 							{
@@ -339,6 +332,12 @@ public:
 				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
 				resetColor();
 				string confirm;
+				if (ApplyUserVect.size() == 0)
+				{
+					setColor(13);
+					cout << "目前没有待处理的用户权限提升申请!";
+					resetColor();
+				}
 				for (int i = 0;i < ApplyUserVect.size();i++)
 				{
 					setColor(13);

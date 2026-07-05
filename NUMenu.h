@@ -30,27 +30,20 @@ public:
 			{
 			case(1):
 			{
-				string tempcolor, tempbrand, length_min, length_max, 
+				string tempcolor, tempbrand, length_min, length_max,
 					width_min, width_max, height_min, height_max;
-				while (true)
-				{
-					setColor(10);
-					cout << "按照如下格式输入：" << endl;
-					cout << "车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值 + 车辆宽度最小值 + 车辆宽度最大值";
-					cout << "+车辆高度最小值 + 车辆高度最大值" << endl;
-					cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
-					cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
-					resetColor();
-					cin >> tempcolor >> tempbrand;
-					cin.ignore();
-					cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
-					cin.ignore();
-					if ((CheckCarAllInfo(length_min, width_min, height_min)) &&
-						(CheckCarAllInfo(length_max, width_max, height_max)))
-						break;
-					else resetCin();
-				}
-				vector<Car> tempvect = searcher("\\", "\\", "\\", 
+				setColor(10);
+				cout << "按照如下格式输入：" << endl;
+				cout << "车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值 + 车辆宽度最小值 + 车辆宽度最大值";
+				cout << "+车辆高度最小值 + 车辆高度最大值" << endl;
+				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
+				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
+				resetColor();
+				cin >> tempcolor >> tempbrand;
+				cin.ignore();
+				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+				cin.ignore();
+				vector<Car> tempvect = searcher("\\", "\\", "\\",
 					tempcolor, tempbrand, stod(length_min), stod(length_max), stod(width_min)
 					, stod(width_max), stod(height_min), stod(height_max));
 				if (tempvect.size() != 0)
@@ -59,9 +52,9 @@ public:
 					cout << "符合条件的车辆有" << tempvect.size() << "辆：" << endl;
 					for (int i = 0;i < tempvect.size();i++)
 					{
-						cout << setw(10) << tempvect[i].getnum() << setw(10) << "********" 
-							<< setw(10) << tempvect[i].getcolor() << setw(10) << tempvect[i].getbrand() 
-						<< setw(5) << tempvect[i].getlength() << setw(5) << tempvect[i].getwidth() 
+						cout << setw(10) << tempvect[i].getnum() << setw(10) << "********"
+							<< setw(10) << tempvect[i].getcolor() << setw(10) << tempvect[i].getbrand()
+							<< setw(5) << tempvect[i].getlength() << setw(5) << tempvect[i].getwidth()
 							<< setw(5) << tempvect[i].getheight() << endl;
 					}
 					resetColor();
@@ -140,7 +133,6 @@ public:
 								setColor(2);
 								cout << "录入新车辆成功!" << endl;
 								resetColor();
-								cin.ignore();
 								nu->AddMyCar(tempnum, tempowner, tempregtime,
 									tempcolor, tempbrand, stod(length), stod(width), stod(height));
 							}

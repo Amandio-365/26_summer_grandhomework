@@ -148,7 +148,6 @@ void Admin::DisplayEdit() const
 		DeleteVect[i].display();
 	i = 0;
 	cout << "本次修改记录如下:" << endl;
-	cout << EditVect.size() << endl;
 	while (i + 1 < EditVect.size())
 	{
 		if (EditVect[i].getnum() == EditVect[i + 1].getnum())
