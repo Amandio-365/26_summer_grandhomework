@@ -14,6 +14,7 @@ int main()
 	string tempid, temppwd;
 	setColor(13);
 	cout << "----------------欢迎来到车辆管理系统！------------" << endl;
+	cout << "--------------------------------------------------" << endl;
 	while (1)
 	{
 		setColor(11);

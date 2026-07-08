@@ -140,13 +140,18 @@ void Admin::Save(vector<Car>& vect, const Car& car)
 void Admin::DisplayEdit() const
 {
 	int i;
+	setColor(3);
 	cout << "本次添加记录如下:" << endl;
+	resetColor();
 	for (i = 0;i < AddVect.size();i++)
 		AddVect[i].display();
+	setColor(3);
 	cout << "本次删除记录如下:" << endl;
+	resetColor();
 	for (i = 0;i < DeleteVect.size();i++)
 		DeleteVect[i].display();
 	i = 0;
+	setColor(3);
 	cout << "本次修改记录如下:" << endl;
 	while (i + 1 < EditVect.size())
 	{
@@ -159,6 +164,7 @@ void Admin::DisplayEdit() const
 			i += 2;
 		}
 	}
+	resetColor();
 }
 void Admin::saveApplyUserVect(const vector<User>& other)
 {

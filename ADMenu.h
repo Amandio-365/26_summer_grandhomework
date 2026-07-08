@@ -28,7 +28,7 @@ public:
 			if (!IsAllNumber(choice))
 			{
 				setColor(4);
-				cout << "输入有非数字!" << endl;
+				cout << "选项输入有非数字!" << endl;
 				resetColor();
 				resetCin();
 				continue;
@@ -39,26 +39,89 @@ public:
 			{
 			case(1):
 			{
-				string tempnum, tempowner, tempregtime, tempcolor, tempbrand,
-					length_min, length_max, width_min, width_max, height_min, height_max;
-
+				string tempnum, tempowner, tempregtime, tempcolor, tempbrand, tempstr1, tempstr2;
+				double length_min, length_max, width_min, width_max, height_min, height_max;
 
 				setColor(10);
-				cout << "按照如下格式输入：" << endl;
-				cout << "车牌照号 + 车主姓名 + 注册时间 + 车辆颜色 + 车辆品牌 + 车辆长度最小值 + 车辆长度最大值";
-				cout << " + 车辆宽度最小值 + 车辆宽度最大值 + 车辆高度最小值 + 车辆高度最大值" << endl;
-				cout << "注意：若您不需要使用某非数字查询条件，请用“\\”填入对应位置, 若您不需要车辆长宽高相应条件";
-				cout << "请务必将0填入最小值处， 将100填入最大值处， 各数据间请用空格隔开！" << endl;
-				resetColor();
-				cin >> tempnum >> tempowner >> tempregtime >> tempcolor >> tempbrand;
+				cout << "欢迎使用系统查询功能:" << endl;
+				cout << "请输入车牌照号: ";
+				cin >> tempnum;
 				cin.ignore();
-				cin >> length_min >> length_max >> width_min >> width_max >> height_min >> height_max;
+				if (tempnum != "\\")
+				{
+					vector<Car> vect = searcher(tempnum, "\\", "\\", "\\", "\\", 0, 100,
+						0, 100, 0, 100);
+					if (vect.size() == 0)
+					{
+						setColor(4);
+						cout << "没有找到对应车辆!" << endl;
+						continue;
+					}
+					else
+					{
+						cout << "符合条件的车辆有 1 辆：" << endl;
+						vect[0].display();
+					}
+				}
+				cout << "请输入车主姓名: ";
+				cin >> tempowner;
 				cin.ignore();
+				cout << "请输入注册时间: ";
+				cin >> tempregtime;
+				cin.ignore();
+				if (!CheckRegtimeFormat(tempregtime) && (tempregtime != "\\"))
+				{
+					setColor(4);
+					cout << "数据校验失败：注册时间格式错误！必须为 YYYY-MM，月份1~12" << endl;
+					resetCin();
+					setColor(10);
+					continue;
+				}
+				cout << "请输入车辆颜色: ";
+				cin >> tempcolor;
+				cin.ignore();
+				cout << "请输入车辆品牌: ";
+				cin >> tempbrand;
+				cin.ignore();
+				cout << "请输入车辆长度范围(如：3.68  4.32)  ";
+				cin >> tempstr1 >> tempstr2;
+				cin.ignore();
+				if (!StringToPositiveDouble(tempstr1, length_min) || (!StringToPositiveDouble(tempstr2, length_max)))
+				{
+					setColor(4);
+					cout << "数据校验失败：车辆长度必须为大于0的数字，仅允许一个小数点" << endl;
+					resetCin();
+					setColor(10);
+					continue;
+				}
+				cout << "请输入车辆宽度范围(如：1.72  2.24)  ";
+				cin >> tempstr1 >> tempstr2;
+				cin.ignore();
+				if (!StringToPositiveDouble(tempstr1, width_min) || (!StringToPositiveDouble(tempstr2, width_max)))
+				{
+					setColor(4);
+					cout << "数据校验失败：车辆宽度必须为大于0的数字，仅允许一个小数点" << endl;
+					resetCin();
+					setColor(10);
+					continue;
+				}
+				cout << "请输入车辆高度范围(如：1.38  1.62)  ";
+				cin >> tempstr1 >> tempstr2;
+				cin.ignore();
+				if (!StringToPositiveDouble(tempstr1, height_min) || (!StringToPositiveDouble(tempstr2, height_max)))
+				{
+					setColor(4);
+					cout << "数据校验失败：车辆高度必须为大于0的数字，仅允许一个小数点" << endl;
+					resetCin();
+					setColor(10);
+					continue;
+				}
 				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
-					stod(length_min), stod(length_max), stod(width_min), stod(width_max), stod(height_min)
-					, stod(height_max));
+					length_min, length_max, width_min, width_max, height_min
+					, height_max);
 				if (tempvect.size() != 0)
 				{
+					sort(tempvect.begin(), tempvect.end());
 					setColor(2);
 					cout << "符合条件的车辆有" << tempvect.size() << "辆：" << endl;
 					for (int i = 0;i < tempvect.size();i++)
@@ -86,12 +149,17 @@ public:
 				resetColor();
 				cin >> temppwd2;
 				cin.ignore();
-				if (temppwd1 == temppwd2)
+				if ((temppwd1 == temppwd2) && (temppwd1 != ad->getpwd()))
 				{
 					setColor(10);
 					cout << "修改成功！" << endl;
 					ad->Editpwd(temppwd1);
 					resetColor();
+				}
+				else if ((temppwd1 == temppwd2) && (temppwd1 == ad->getpwd()))
+				{
+					setColor(4);
+					cout << "新密码不能与旧密码相同!" << endl;
 				}
 				else
 				{
@@ -113,7 +181,7 @@ public:
 					if (!IsAllNumber(second_choice))
 					{
 						setColor(4);
-						cout << "输入有非数字!" << endl;
+						cout << "选项输入有非数字!" << endl;
 						resetColor();
 						resetCin();
 						continue;
@@ -124,31 +192,57 @@ public:
 					{
 					case(1):
 					{
-						while (true)
+						string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand, tempstr;
+						double length, width, height;
+
+						setColor(10);		cout << "请输入车牌照号: ";		resetColor();
+						cin >> tempnum;		cin.ignore();
+						setColor(10);		cout << "请输入车主姓名: ";		resetColor();
+						cin >> tempowner;		cin.ignore();
+						setColor(10);		cout << "请输入车主ID: ";		resetColor();
+						cin >> tempownerid;		cin.ignore();
+						setColor(10);		cout << "请输入注册时间: ";		resetColor();
+						cin >> tempregtime;		cin.ignore();
+						if (!CheckRegtimeFormat(tempregtime))
 						{
-							string tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand,
-								length, width, height;
-							setColor(10);
-							cout << "请依次输入新车辆的车牌号、用户名、持有者id、注册时间、颜色、品牌、长度、宽度与高度，用空格分开 " << endl;
-							resetColor();
-							cin >> tempnum >> tempowner >> tempownerid >> tempregtime >> tempcolor
-								>> tempbrand >> length >> width >> height;
-							cin.ignore();
-							if (CheckCarAllInfo(length, width, height, tempregtime))
-							{
-								setColor(2);
-								cout << "录入新车辆成功!" << endl;
-								resetColor();
-								ad->AddCar(tempnum, tempowner, tempownerid, tempregtime,
-									tempcolor, tempbrand, stod(length), stod(width), stod(height));
-								break;
-							}
-							else
-							{
-								reportError();
-								resetCin();
-							}
+							setColor(4);
+							cout << "数据校验失败：注册时间格式错误！必须为 YYYY-MM，月份1~12" << endl;
+							resetCin();		setColor(10);
+							continue;
 						}
+						cout << "请输入车辆颜色: ";
+						cin >> tempcolor;		cin.ignore();
+						cout << "请输入车辆品牌: ";
+						cin >> tempbrand;		cin.ignore();
+						cout << "请输入车辆长度: ";
+						cin >> tempstr;		cin.ignore();
+						if (!StringToPositiveDouble(tempstr, length))
+						{
+							setColor(4);
+							cout << "数据校验失败：车辆长度必须为大于0的数字，仅允许一个小数点" << endl;
+							resetCin();		setColor(10);
+							continue;
+						}
+						cout << "请输入车辆宽度: ";
+						cin >> tempstr;		cin.ignore();
+						if (!StringToPositiveDouble(tempstr, width))
+						{
+							setColor(4);
+							cout << "数据校验失败：车辆宽度必须为大于0的数字，仅允许一个小数点" << endl;
+							resetCin();		setColor(10);
+							continue;
+						}
+						cout << "请输入车辆高度: ";
+						cin >> tempstr;		cin.ignore();
+						if (!StringToPositiveDouble(tempstr, height))
+						{
+							setColor(4);
+							cout << "数据校验失败：车辆高度必须为大于0的数字，仅允许一个小数点" << endl;
+							resetCin();		setColor(10);
+							continue;
+						}
+						ad->AddCar(tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand,
+							length, width, height);
 						break;
 					}
 					case(2):
@@ -171,23 +265,20 @@ public:
 					{
 						string tempnum, newinfo, position, newdata;
 						double temp;
-						while (true)
+
+						setColor(10);
+						cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
+						cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
+						resetColor();
+						cin >> tempnum >> position;
+						cin.ignore();
+						if (!IsAllNumber(position))
 						{
-							setColor(10);
-							cout << "请您输入想要修改信息的车辆车牌号、修改数据类型以及新数据：(之间用空白隔开）" << endl;
-							cout << "1--车主姓名  2--车辆颜色  3--车辆长度  4--车辆宽度  5--车辆高度" << endl;
+							setColor(4);
+							cout << "修改选项输入有非数字!" << endl;
 							resetColor();
-							cin >> tempnum >> position;
-							cin.ignore();
-							if (!IsAllNumber(position))
-							{
-								setColor(4);
-								cout << "输入有非数字!" << endl;
-								resetColor();
-								resetCin();
-								continue;
-							}
-							else break;
+							resetCin();
+							continue;
 						}
 						int int_pos = stoi(position);
 						if ((int_pos == 1) || (int_pos == 2))
@@ -199,7 +290,7 @@ public:
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
 								resetColor();
-								break;
+								continue;
 							}
 							else
 							{
@@ -210,26 +301,24 @@ public:
 						}
 						else if ((int_pos == 3) || (int_pos == 4) || (int_pos == 5))
 						{
-							while (true)
+							cin >> newdata;
+							cin.ignore();
+							if (!StringToPositiveDouble(newdata, temp))
 							{
-								cin >> newdata;
-								cin.ignore();
-								if (!StringToPositiveDouble(newdata, temp))
-								{
-									setColor(4);
-									cout << "新数据输入有误!" << endl;
-									resetColor();
-									resetCin();
-									continue;
-								}
-								else break;
+								setColor(4);
+								cout << "新数据输入有误!" << endl;
+								cout << "车辆长宽高必须为大于0的数字且仅允许一个小数点" << endl;
+								resetColor();
+								resetCin();
+								continue;
 							}
+
 							if (!ad->EditCar2(tempnum, int_pos, stod(newdata)))
 							{
 								setColor(4);
 								cout << "未找到对应车牌照的车辆！" << endl;
 								resetColor();
-								break;
+								continue;
 							}
 							else
 							{
@@ -272,7 +361,7 @@ public:
 				if (!IsAllNumber(i))
 				{
 					setColor(4);
-					cout << "输入有非数字!" << endl;
+					cout << "选项输入有非数字!" << endl;
 					resetColor();
 					resetCin();
 					continue;
@@ -330,6 +419,7 @@ public:
 			{
 				setColor(9);
 				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
+				cout << "(注：输入back即可结束处理退回上级菜单)" << endl;
 				resetColor();
 				string confirm;
 				if (ApplyUserVect.size() == 0)
@@ -348,6 +438,7 @@ public:
 					cin >> confirm;
 					cin.ignore();
 					if (confirm == "1") ApplyUserVect[i].Resetauth(2);
+					else if (confirm == "back") break;
 					else ApplyUserVect[i].Resetauth(3);
 				}
 				setColor(10);
@@ -372,7 +463,8 @@ public:
 	}
 	virtual void DisplayMenu()
 	{
-		setColor(14);
+		cout << endl;
+		setColor(12);
 		cout << "-------------------欢迎来到管理员界面！-----------------" << endl;
 		cout << "-----------------请选择您需要使用的功能：---------------" << endl;
 		cout << "-------------------1.查询车辆与排序---------------------" << endl;
@@ -386,7 +478,7 @@ public:
 	}
 	void second_display()
 	{
-		setColor(14);
+		setColor(12);
 		cout << "-------------------请选择您要进行的操作-----------------" << endl;
 		cout << "-----------------------1.增添车辆-----------------------" << endl;
 		cout << "-----------------------2.删除车辆-----------------------" << endl;

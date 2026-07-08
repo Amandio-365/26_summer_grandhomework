@@ -104,7 +104,7 @@ bool StringToPositiveDouble(const string& s, double& outNum)
 
 	// ×ª¸¡µã
 	outNum = stod(s);
-	return outNum > 0;
+	return outNum >= 0;
 }
 bool CheckRegtimeFormat(const string& timeStr)
 {
