@@ -1,5 +1,4 @@
 #include"Admin.h"
-#include"User.h"
 #include"GlobalData.h"
 using namespace std;
 Admin::Admin() :User(), FileIO(){}

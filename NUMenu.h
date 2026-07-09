@@ -1,6 +1,4 @@
 #pragma once
-#include<iomanip>
-#include"Car.h"
 #include"Menu.h"
 #include"NormalUser.h"
 #include"GlobalData.h"
@@ -74,7 +72,7 @@ public:
 					setColor(10);
 					continue;
 				}
-				vector<Car> tempvect = searcher("\\", "\\", "\\", tempcolor, tempbrand,
+				vector<Car> tempvect = searcher("\\", "\\", "\\", "\\", tempcolor, tempbrand,
 					length_min, length_max, width_min, width_max, height_min, height_max);
 				if (tempvect.size() != 0)
 				{
@@ -165,12 +163,12 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆颜色: ";
+						setColor(10);		cout << "请输入车辆颜色: ";		resetColor();
 						cin >> tempcolor;		cin.ignore();
-						cout << "请输入车辆品牌: ";
+						setColor(10);		cout << "请输入车辆品牌: ";		resetColor();
 						cin >> tempbrand;		cin.ignore();
-						cout << "请输入车辆长度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆长度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, length))
 						{
 							setColor(4);
@@ -178,8 +176,8 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆宽度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆宽度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, width))
 						{
 							setColor(4);
@@ -187,8 +185,8 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆高度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆高度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, height))
 						{
 							setColor(4);
@@ -198,6 +196,8 @@ public:
 						}
 						nu->AddMyCar(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
 							length, width, height);
+						setColor(10);
+						cout << "添加成功!" << endl;
 						break;
 					}
 					case(2):

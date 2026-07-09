@@ -1,7 +1,7 @@
 #include"GlobalData.h"
 std::vector<Car> cvecforall;
 std::vector<User> uvecforall;
-vector<Car> searcher(string num, string owner, string regtime,
+vector<Car> searcher(string num, string owner, string regtime_min, string regtime_max,
 	string color, string brand, double length_min, double length_max,
 	double width_min, double width_max, double height_min, double height_max)
 {
@@ -10,7 +10,8 @@ vector<Car> searcher(string num, string owner, string regtime,
 	{
 		if (((num == cvecforall[i].getnum()) || (num == "\\"))
 			&& ((owner == cvecforall[i].getowner()) || (owner == "\\"))
-			&& ((regtime == cvecforall[i].getregtime()) || (regtime == "\\"))
+			&& ((regtime_min <= cvecforall[i].getregtime()) || (regtime_min == "\\"))
+			&& ((regtime_max >= cvecforall[i].getregtime()) || (regtime_max == "\\"))
 			&& ((color == cvecforall[i].getcolor()) || (color == "\\"))
 			&& ((brand == cvecforall[i].getownerid()) || (brand == "\\"))
 			&& ((length_min <= cvecforall[i].getlength()) && (length_max >= cvecforall[i].getlength()))

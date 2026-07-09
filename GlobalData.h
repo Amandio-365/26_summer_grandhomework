@@ -13,7 +13,7 @@
 using namespace std;
 extern std::vector<Car> cvecforall;
 extern std::vector<User> uvecforall;
-extern vector<Car> searcher(string num, string owner, string regtime,
+extern vector<Car> searcher(string num, string owner, string regtime_min, string regtime_max,
 	string color, string brand, double length_min, double length_max,
 	double width_min, double width_max, double height_min, double height_max);
 bool cpirt(const Car& c1, const Car& c2);

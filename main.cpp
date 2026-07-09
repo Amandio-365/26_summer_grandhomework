@@ -1,8 +1,6 @@
 #include"GlobalData.h"
 #include"ADMenu.h"
 #include"NUMenu.h"
-#include"Car.h"
-#include"User.h"
 using namespace std;
 int main()
 {

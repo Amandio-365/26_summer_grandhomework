@@ -1,5 +1,4 @@
 #pragma once
-#include"Car.h"
 #include"Menu.h"
 #include"Admin.h"
 #include"GlobalData.h"
@@ -39,7 +38,7 @@ public:
 			{
 			case(1):
 			{
-				string tempnum, tempowner, tempregtime, tempcolor, tempbrand, tempstr1, tempstr2;
+				string tempnum, tempowner, tempregtime1, tempregtime2, tempcolor, tempbrand, tempstr1, tempstr2;
 				double length_min, length_max, width_min, width_max, height_min, height_max;
 
 				setColor(10);
@@ -49,7 +48,7 @@ public:
 				cin.ignore();
 				if (tempnum != "\\")
 				{
-					vector<Car> vect = searcher(tempnum, "\\", "\\", "\\", "\\", 0, 100,
+					vector<Car> vect = searcher(tempnum, "\\", "\\", "\\", "\\", "\\",  0, 100,
 						0, 100, 0, 100);
 					if (vect.size() == 0)
 					{
@@ -66,10 +65,11 @@ public:
 				cout << "请输入车主姓名: ";
 				cin >> tempowner;
 				cin.ignore();
-				cout << "请输入注册时间: ";
-				cin >> tempregtime;
+				cout << "请输入注册时间范围(如：2001-01  2008-09)";
+				cin >> tempregtime1 >> tempregtime2;
 				cin.ignore();
-				if (!CheckRegtimeFormat(tempregtime) && (tempregtime != "\\"))
+				if ((!CheckRegtimeFormat(tempregtime1) && (tempregtime1 != "\\")) ||
+					(!CheckRegtimeFormat(tempregtime2) && (tempregtime2 != "\\")))
 				{
 					setColor(4);
 					cout << "数据校验失败：注册时间格式错误！必须为 YYYY-MM，月份1~12" << endl;
@@ -116,7 +116,7 @@ public:
 					setColor(10);
 					continue;
 				}
-				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime, tempcolor, tempbrand,
+				vector<Car> tempvect = searcher(tempnum, tempowner, tempregtime1, tempregtime2, tempcolor, tempbrand,
 					length_min, length_max, width_min, width_max, height_min
 					, height_max);
 				if (tempvect.size() != 0)
@@ -210,12 +210,12 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆颜色: ";
+						setColor(10);		cout << "请输入车辆颜色: ";		resetColor();
 						cin >> tempcolor;		cin.ignore();
-						cout << "请输入车辆品牌: ";
+						setColor(10);		cout << "请输入车辆品牌: ";		resetColor();
 						cin >> tempbrand;		cin.ignore();
-						cout << "请输入车辆长度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆长度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, length))
 						{
 							setColor(4);
@@ -223,8 +223,8 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆宽度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆宽度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, width))
 						{
 							setColor(4);
@@ -232,8 +232,8 @@ public:
 							resetCin();		setColor(10);
 							continue;
 						}
-						cout << "请输入车辆高度: ";
-						cin >> tempstr;		cin.ignore();
+						setColor(10);		cout << "请输入车辆高度: ";		resetColor();
+						cin >> tempstr;			cin.ignore();
 						if (!StringToPositiveDouble(tempstr, height))
 						{
 							setColor(4);
@@ -417,17 +417,18 @@ public:
 			}
 			case(6):
 			{
-				setColor(9);
-				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
-				cout << "(注：输入back即可结束处理退回上级菜单)" << endl;
-				resetColor();
-				string confirm;
 				if (ApplyUserVect.size() == 0)
 				{
 					setColor(13);
 					cout << "目前没有待处理的用户权限提升申请!";
 					resetColor();
+					continue;
 				}
+				setColor(9);
+				cout << "输入1以批准用户申请，其他输入均将被当作拒绝申请" << endl;
+				cout << "(注：输入back即可结束处理退回上级菜单)" << endl;
+				resetColor();
+				string confirm;
 				for (int i = 0;i < ApplyUserVect.size();i++)
 				{
 					setColor(13);
