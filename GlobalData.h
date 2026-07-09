@@ -29,5 +29,4 @@ bool IsDigitChar(char ch);
 bool IsAllNumber(const string& str);
 bool StringToPositiveDouble(const string& str, double& outNum);
 bool CheckRegtimeFormat(const string& str);
-bool CheckCarAllInfo(const string& length, const string& width, const string& height, const string& regtime = "1001-01");
 void resetCin();

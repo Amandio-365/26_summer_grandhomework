@@ -131,22 +131,6 @@ void NormalUser::Editauth(int newauth)
 			break;
 		}
 }
-bool NormalUser::ToAdmin(string nuID, string adID, string adPWD)
-{
-	for (int i = 0;i < uvecforall.size();i++)
-		if ((uvecforall[i].getid() == adID) && (uvecforall[i].getpwd() == adPWD) && (uvecforall[i].getauth() == 1))
-		{
-			for (int j = 0;j < uvecforall.size();j++)
-				if (uvecforall[j].getid() == nuID)
-				{
-					uvecforall[j].Resetauth(1);
-					break;
-				}
-			return true;
-			break;
-		}
-	return false;
-}
 void NormalUser::SaveToCVFA()
 {
 	for (int i = 0;i < cvecforall.size();)

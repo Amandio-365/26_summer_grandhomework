@@ -156,8 +156,10 @@ void Admin::DisplayEdit() const
 	{
 		if (EditVect[i].getnum() == EditVect[i + 1].getnum())
 		{
+			setColor(3);
 			cout << "½«   ";
 			EditVect[i].display();
+			setColor(3);
 			cout << "¸ÄÎª ";
 			EditVect[i + 1].display();
 			i += 2;

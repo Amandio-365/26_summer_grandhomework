@@ -243,6 +243,9 @@ public:
 						}
 						ad->AddCar(tempnum, tempowner, tempownerid, tempregtime, tempcolor, tempbrand,
 							length, width, height);
+						setColor(10);
+						cout << "Ìí¼Ó³É¹¦!" << endl;
+						resetColor();
 						break;
 					}
 					case(2):

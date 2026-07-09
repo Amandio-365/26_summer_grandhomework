@@ -20,7 +20,6 @@ public:
 	bool EditMyCar2(string carnum, int position, double newinfo);
 	void Editpwd(string pwd);
 	void Editauth(int newauth);
-	bool ToAdmin(string nuID, string adID, string adPWD);
 	void SaveToCVFA();
 	void ApplyToBeAdmin();
 private:

@@ -136,46 +136,6 @@ bool CheckRegtimeFormat(const string& timeStr)
 	int month = stoi(monthStr);
 	return (month >= 1 && month <= 12);
 }
-bool CheckCarAllInfo(const string& lenStr,
-	const string& widStr,
-	const string& higStr,
-	const string& regTimeStr)
-{
-	if (!CheckRegtimeFormat(regTimeStr))
-	{
-		setColor(4);
-		cout << "数据校验失败：注册时间格式错误！必须为 YYYY-MM，月份1~12" << endl;
-		resetColor();
-		return false;
-	}
-	double temp;
-	if (!StringToPositiveDouble(lenStr, temp))
-	{
-		setColor(4);
-		cout << "数据校验失败：车辆长度必须为大于0的数字，仅允许一个小数点" << endl;
-		resetColor();
-		return false;
-	}
-	// 3. 校验宽度
-	if (!StringToPositiveDouble(widStr, temp))
-	{
-		setColor(4);
-		cout << "数据校验失败：车辆宽度必须为大于0的数字，仅允许一个小数点" << endl;
-		resetColor();
-		return false;
-	}
-	// 4. 校验高度
-	if (!StringToPositiveDouble(higStr, temp))
-	{
-		setColor(4);
-		cout << "数据校验失败：车辆高度必须为大于0的数字，仅允许一个小数点" << endl;
-		resetColor();
-		return false;
-	}
-
-	// 全部校验通过
-	return true;
-}
 void resetCin()
 {
 	cin.clear();
